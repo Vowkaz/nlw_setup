@@ -4,15 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx src/server.ts",
+    "watch": "tsx watch src/server.ts",
+    "prisma db": "prisma db pull",
+    "prisma gen": "prisma generate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^4.9.0",
     "fastify": "^4.11.0"
   },
   "devDependencies": {
+    "prisma": "^4.9.0",
+    "tsx": "^3.12.2",
     "typescript": "^4.9.4"
   }
 }
