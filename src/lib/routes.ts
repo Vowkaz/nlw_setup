@@ -28,7 +28,7 @@ export async function a(app: FastifyInstance) {
         })
     })
 
-    app.get('/day', async(req) => {
+    app.get('/day', async (req) => {
         const getDayParams = z.object({
             date: z.coerce.date()
         })
@@ -70,6 +70,53 @@ export async function a(app: FastifyInstance) {
 
     })
 
+    app.patch('/habits/:id/toggle', async (req) => {
+
+        const toogleHabits = z.object({
+            id: z.string().uuid(),
+        })
+        const {id} = toogleHabits.parse(req.params)
+        const today = dayjs().startOf('day').toDate()
+
+        let day = await prisma.day.findUnique({
+            where: {
+                date: today
+            }
+        })
+        if (!day) {
+            day = await prisma.day.create({
+                data: {
+                    date: today,
+                }
+            })
+        }
+
+        const dayHabit = await prisma.dayhabits.findUnique({
+            where: {
+                day_id_habit_id: {
+                    day_id: day.id,
+                    habit_id: id
+                }
+            }
+        })
+        if (dayHabit) {
+            await prisma.dayhabits.delete({
+                where: {
+                    id: dayHabit.id
+                }
+            })
+        } else {
+            await prisma.dayhabits.create({
+                    data: {
+                        day_id: day.id,
+                        habit_id: id
+                    }
+                }
+            )
+        }
+
+
+    })
 
 }
 
